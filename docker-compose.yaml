@@ -1,0 +1,21 @@
+# Brug postgres/traeningsklar som bruger/kodeord
+
+services:
+  db:
+    image: postgres:17-alpine
+    restart: always
+    shm_size: 128mb
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: traeningsklar
+      POSTGRES_DB: postgres
+    ports:
+      - 5432:5432
+
+  adminer:
+    image: adminer
+    restart: always
+    environment:
+      - ADMINER_DEFAULT_SERVER=db
+    ports:
+      - 8080:8080
