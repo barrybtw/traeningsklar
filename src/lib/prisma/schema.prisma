@@ -9,19 +9,23 @@ datasource db {
 }
 
 model User {
-  id            String    @id
-  name          String
-  email         String
-  emailVerified Boolean
-  image         String?
-  createdAt     DateTime
-  updatedAt     DateTime
-  role          String?
-  banned        Boolean?
-  banReason     String?
-  banExpires    DateTime?
-  sessions      Session[]
-  accounts      Account[]
+  id             String         @id
+  name           String
+  email          String
+  emailVerified  Boolean
+  image          String?
+  createdAt      DateTime
+  updatedAt      DateTime
+  role           String?
+  banned         Boolean?
+  banReason      String?
+  banExpires     DateTime?
+  sessions       Session[]
+  accounts       Account[]
+  teams          Team[]         @relation("TeamTrainers")
+  exercises      Exercise[]     @relation("TrainerExercises")
+  invitations    TeamInvite[]   @relation("InviteeInvites")
+  trainingPasses TrainingPass[] @relation("TrainerTrainingPasses")
 
   @@unique([email])
   @@map("user")
@@ -71,4 +75,96 @@ model Verification {
   updatedAt  DateTime?
 
   @@map("verification")
+}
+
+// Fodboldøvelse
+model Exercise {
+  id             String                 @id @default(uuid())
+  name           String
+  theme          String
+  subTheme       String
+  minAgeGroup    Int // fx 10 for U10
+  maxAgeGroup    Int // fx 14 for U14
+  durationMin    Int? // minutter, ca. tid
+  idealPlayers   Int? // ideelt antal spillere
+  idealArea      String? // fx "20x30m"
+  requirements   String? // evt. ekstra krav, tekst
+  focusPoints    String? // tekst, evt. markdown
+  variations     String? // tekst, evt. markdown
+  competition    String? // tekst, evt. markdown, ikke nødvendig
+  description    String
+  imageUrl       String? // billede, valgfri
+  videoUrl       String? // video, valgfri
+  inPublicBank   Boolean // true = i træningsbanken (admin styrer)
+  trainerId      String? // hvis tilknyttet træners egen bank
+  trainer        User?                  @relation("TrainerExercises", fields: [trainerId], references: [id])
+  createdAt      DateTime               @default(now())
+  updatedAt      DateTime               @updatedAt
+  trainingPasses TrainingPassExercise[]
+}
+
+// Træningspas
+model TrainingPass {
+  id          String                 @id @default(uuid())
+  name        String
+  minAgeGroup Int
+  maxAgeGroup Int
+  theme       String
+  subTheme    String
+  description String
+  trainerId   String
+  trainer     User                   @relation("TrainerTrainingPasses", fields: [trainerId], references: [id])
+  createdAt   DateTime               @default(now())
+  updatedAt   DateTime               @updatedAt
+  exercises   TrainingPassExercise[]
+}
+
+// Mange-til-mange mellem TrainingPass og Exercise
+model TrainingPassExercise {
+  id             String       @id @default(uuid())
+  trainingPassId String
+  exerciseId     String
+  order          Int? // rækkefølge i træningspasset
+  trainingPass   TrainingPass @relation(fields: [trainingPassId], references: [id])
+  exercise       Exercise     @relation(fields: [exerciseId], references: [id])
+}
+
+// Hold
+model Team {
+  id          String       @id @default(uuid())
+  name        String
+  year        Int // fx 2016
+  gender      Gender
+  club        String // klubnavn, string
+  trainers    User[]       @relation("TeamTrainers")
+  invitations TeamInvite[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+}
+
+// Invitation til hold
+model TeamInvite {
+  id        String       @id @default(uuid())
+  teamId    String
+  inviteeId String? // Kan være null indtil accepteret
+  email     String // email på den inviterede træner
+  status    InviteStatus @default(PENDING)
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+  team      Team         @relation(fields: [teamId], references: [id])
+  invitee   User?        @relation("InviteeInvites", fields: [inviteeId], references: [id])
+}
+
+// Enum for køn
+enum Gender {
+  DRENGE
+  PIGER
+  MIX
+}
+
+// Enum for invitation status
+enum InviteStatus {
+  PENDING
+  ACCEPTED
+  DECLINED
 }

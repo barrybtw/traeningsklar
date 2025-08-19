@@ -171,6 +171,69 @@ exports.Prisma.VerificationScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.ExerciseScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  theme: 'theme',
+  subTheme: 'subTheme',
+  minAgeGroup: 'minAgeGroup',
+  maxAgeGroup: 'maxAgeGroup',
+  durationMin: 'durationMin',
+  idealPlayers: 'idealPlayers',
+  idealArea: 'idealArea',
+  requirements: 'requirements',
+  focusPoints: 'focusPoints',
+  variations: 'variations',
+  competition: 'competition',
+  description: 'description',
+  imageUrl: 'imageUrl',
+  videoUrl: 'videoUrl',
+  inPublicBank: 'inPublicBank',
+  trainerId: 'trainerId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.TrainingPassScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  minAgeGroup: 'minAgeGroup',
+  maxAgeGroup: 'maxAgeGroup',
+  theme: 'theme',
+  subTheme: 'subTheme',
+  description: 'description',
+  trainerId: 'trainerId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.TrainingPassExerciseScalarFieldEnum = {
+  id: 'id',
+  trainingPassId: 'trainingPassId',
+  exerciseId: 'exerciseId',
+  order: 'order'
+};
+
+exports.Prisma.TeamScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  year: 'year',
+  gender: 'gender',
+  club: 'club',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.TeamInviteScalarFieldEnum = {
+  id: 'id',
+  teamId: 'teamId',
+  inviteeId: 'inviteeId',
+  email: 'email',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -185,13 +248,28 @@ exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
 };
+exports.Gender = exports.$Enums.Gender = {
+  DRENGE: 'DRENGE',
+  PIGER: 'PIGER',
+  MIX: 'MIX'
+};
 
+exports.InviteStatus = exports.$Enums.InviteStatus = {
+  PENDING: 'PENDING',
+  ACCEPTED: 'ACCEPTED',
+  DECLINED: 'DECLINED'
+};
 
 exports.Prisma.ModelName = {
   User: 'User',
   Session: 'Session',
   Account: 'Account',
-  Verification: 'Verification'
+  Verification: 'Verification',
+  Exercise: 'Exercise',
+  TrainingPass: 'TrainingPass',
+  TrainingPassExercise: 'TrainingPassExercise',
+  Team: 'Team',
+  TeamInvite: 'TeamInvite'
 };
 
 /**
